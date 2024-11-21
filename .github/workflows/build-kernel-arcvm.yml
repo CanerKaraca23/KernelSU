@@ -31,8 +31,8 @@ jobs:
             build_config: build.config.gki.aarch64
             defconfig: arm64_arcvm_defconfig
 
-    name: Build ChromeOS ARCVM kernel
-    runs-on: ubuntu-22.04
+    name: Build ChromeOS ARCVM kernell
+    runs-on: ubuntu-20.04
     env:
       LTO: thin
       ROOT_DIR: /
