@@ -28,20 +28,10 @@ jobs:
           packages: bc bison build-essential flex libelf-dev binutils-aarch64-linux-gnu gcc-aarch64-linux-gnu gzip ccache
           version: 1.0
 
-      - name: Cache LLVM
-        id: cache-llvm
-        uses: actions/cache@v4
-        with:
-          path: ./llvm
-          key: llvm-12.0.1
-
       - name: Setup LLVM
         uses: KyleMayes/install-llvm-action@v2
         with:
           version: "12.0.1"
-          force-version: true
-          ubuntu-version: "16.04"
-          cached: ${{ steps.cache-llvm.outputs.cache-hit }}
 
       - name: Checkout KernelSU
         uses: actions/checkout@v4
