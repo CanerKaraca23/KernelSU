@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rustup 1.82
+      - run: rustup update nightly
 
       - name: Install cross
         run: cargo install cross
