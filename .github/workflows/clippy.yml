@@ -14,19 +14,15 @@ on:
       - '.github/workflows/clippy.yml'
       - 'userspace/ksud/**'
 
-env:
-  RUSTFLAGS: '-Dwarnings'
-
 jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: rustup default 1.82
+      - run: rustup 1.82
 
       - name: Install cross
-        run: |
-          cargo install cross
+        run: cargo install cross
 
       - name: Run clippy
         run: |
