@@ -14,10 +14,6 @@ updates:
       interval: daily
     allow:
       - dependency-type: "all"
-    groups:
-      crates:
-        patterns:
-          - "*"
   - package-ecosystem: gradle
     directory: manager
     schedule:
