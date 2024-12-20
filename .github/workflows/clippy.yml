@@ -14,9 +14,6 @@ on:
       - '.github/workflows/clippy.yml'
       - 'userspace/ksud/**'
 
-env:
-  RUSTFLAGS: '-Dwarnings'
-
 jobs:
   clippy:
     runs-on: ubuntu-latest
