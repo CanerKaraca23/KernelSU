@@ -3,7 +3,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: daily
     groups:
       actions:
         patterns:
@@ -11,17 +11,14 @@ updates:
   - package-ecosystem: cargo
     directory: userspace/ksud
     schedule:
-      interval: weekly
+      interval: daily
     allow:
       - dependency-type: "all"
-    groups:
-      crates:
-        patterns:
-          - "*"
+    open-pull-requests-limit: 10
   - package-ecosystem: gradle
     directory: manager
     schedule:
-      interval: weekly
+      interval: daily
     groups:
       maven:
         patterns:
@@ -29,7 +26,7 @@ updates:
   - package-ecosystem: npm
     directory: website
     schedule:
-      interval: weekly
+      interval: daily
     allow:
       - dependency-type: "all"
     groups:
