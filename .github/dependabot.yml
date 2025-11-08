@@ -14,7 +14,7 @@ updates:
       interval: daily
     allow:
       - dependency-type: "all"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 99
   - package-ecosystem: gradle
     directory: manager
     schedule:
