@@ -48,7 +48,7 @@ regex-lite = "0.1"
 fs4 = "0.13"
 
 [target.'cfg(any(target_os = "android", target_os = "linux"))'.dependencies]
-rustix = { git = "https://github.com/Kernel-SU/rustix.git", branch = "main", features = [
+rustix = { git = "https://github.com/Kernel-SU/rustix.git", rev = "fd3fed2", branch = "main", features = [
     "all-apis",
 ] }
 # some android specific dependencies which compiles under unix are also listed here for convenience of coding
