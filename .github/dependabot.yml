@@ -14,7 +14,10 @@ updates:
       interval: daily
     allow:
       - dependency-type: "all"
-    open-pull-requests-limit: 99
+    groups:
+      crates:
+        patterns:
+          - "*"
   - package-ecosystem: gradle
     directory: manager
     schedule:
