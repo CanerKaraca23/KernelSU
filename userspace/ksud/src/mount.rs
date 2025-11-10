@@ -4,6 +4,8 @@ use anyhow::{Ok, Result, anyhow, bail};
 use anyhow::Context;
 #[cfg(any(target_os = "linux", target_os = "android"))]
 use rustix::{fd::AsFd, fs::CWD, mount::*};
+#[cfg(any(target_os = "linux", target_os = "android"))]
+use std::ffi::CString;
 
 use crate::defs::KSU_OVERLAY_SOURCE;
 use log::{info, warn};
@@ -140,12 +142,13 @@ pub fn mount_overlayfs(
         if let (Some(upperdir), Some(workdir)) = (upperdir, workdir) {
             data = format!("{data},upperdir={upperdir},workdir={workdir}");
         }
+        let data_cstr = CString::new(data)?;
         mount(
             KSU_OVERLAY_SOURCE,
             dest.as_ref(),
             "overlay",
             MountFlags::empty(),
-            data,
+            data_cstr.as_c_str(),
         )?;
     }
     Ok(())
