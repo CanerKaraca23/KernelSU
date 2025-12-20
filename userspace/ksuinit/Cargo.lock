@@ -52,6 +52,7 @@ dependencies = [
  "kernlog",
  "log",
  "rustix",
+ "scroll 0.12.0",
  "scroll 0.13.0",
  "syscalls",
 ]
