@@ -170,6 +170,7 @@ fun AppProfileTemplateScreen(
         tint = HazeTint(colorScheme.surface.copy(0.8f))
     )
 
+    @Suppress("DEPRECATION")
     Scaffold(
         topBar = {
             val clipboardManager = LocalClipboardManager.current
