@@ -23,7 +23,7 @@ syscalls = { version = "0.7", default-features = false, features = [
 
 # for kmsg logging
 log = "0.4"
-kernlog = "0.3"
+kernlog = { git = "https://github.com/kstep/kernlog.rs" }
 
 [profile.release]
 strip = true
