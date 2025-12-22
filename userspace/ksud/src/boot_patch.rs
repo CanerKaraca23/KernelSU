@@ -399,13 +399,14 @@ fn find_magiskboot(magiskboot_path: Option<PathBuf>, workdir: &Path) -> Result<P
     Ok(magiskboot)
 }
 
+#[cfg_attr(not(target_os = "android"), allow(unused_variables))]
 fn find_boot_image(
     image: &Option<PathBuf>,
-    _kmi: &str,
-    _ota: bool,
-    _is_replace_kernel: bool,
-    _workdir: &Path,
-    _partition: &Option<String>,
+    kmi: &str,
+    ota: bool,
+    is_replace_kernel: bool,
+    workdir: &Path,
+    partition: &Option<String>,
 ) -> Result<(PathBuf, Option<String>)> {
     let bootimage;
     let bootdevice;
@@ -422,12 +423,12 @@ fn find_boot_image(
 
         #[cfg(target_os = "android")]
         {
-            let slot_suffix = get_slot_suffix(_ota);
-            let boot_partition_name = choose_boot_partition(_kmi, _is_replace_kernel, _partition);
+            let slot_suffix = get_slot_suffix(ota);
+            let boot_partition_name = choose_boot_partition(kmi, is_replace_kernel, partition);
             let boot_partition = format!("/dev/block/by-name/{boot_partition_name}{slot_suffix}");
 
             println!("- Bootdevice: {boot_partition}");
-            let tmp_boot_path = _workdir.join("boot.img");
+            let tmp_boot_path = workdir.join("boot.img");
 
             dd(&boot_partition, &tmp_boot_path)?;
 
