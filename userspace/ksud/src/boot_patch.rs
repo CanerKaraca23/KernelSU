@@ -401,17 +401,18 @@ fn find_magiskboot(magiskboot_path: Option<PathBuf>, workdir: &Path) -> Result<P
 
 fn find_boot_image(
     image: &Option<PathBuf>,
-    kmi: &str,
-    ota: bool,
-    is_replace_kernel: bool,
-    workdir: &Path,
-    partition: &Option<String>,
+    _kmi: &str,
+    _ota: bool,
+    _is_replace_kernel: bool,
+    _workdir: &Path,
+    _partition: &Option<String>,
 ) -> Result<(PathBuf, Option<String>)> {
     let bootimage;
-    let mut bootdevice = None;
+    let bootdevice;
     if let Some(ref image) = *image {
         ensure!(image.exists(), "boot image not found");
         bootimage = std::fs::canonicalize(image)?;
+        bootdevice = None;
     } else {
         #[cfg(not(target_os = "android"))]
         {
@@ -421,12 +422,12 @@ fn find_boot_image(
 
         #[cfg(target_os = "android")]
         {
-            let slot_suffix = get_slot_suffix(ota);
-            let boot_partition_name = choose_boot_partition(kmi, is_replace_kernel, partition);
+            let slot_suffix = get_slot_suffix(_ota);
+            let boot_partition_name = choose_boot_partition(_kmi, _is_replace_kernel, _partition);
             let boot_partition = format!("/dev/block/by-name/{boot_partition_name}{slot_suffix}");
 
             println!("- Bootdevice: {boot_partition}");
-            let tmp_boot_path = workdir.join("boot.img");
+            let tmp_boot_path = _workdir.join("boot.img");
 
             dd(&boot_partition, &tmp_boot_path)?;
 
