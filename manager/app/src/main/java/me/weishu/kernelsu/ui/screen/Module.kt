@@ -148,6 +148,8 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
+// LocalContextGetResourceValueCall is a false positive for SharedPreferences in Compose
+// StringFormatInvalid: Some localized translations may be missing format placeholders
 @SuppressLint("StringFormatInvalid", "LocalContextGetResourceValueCall")
 @Composable
 fun ModulePager(

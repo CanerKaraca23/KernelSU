@@ -287,6 +287,8 @@ fun MainScreen(navController: DestinationsNavigator) {
  * - In normal mode: Shows a confirmation dialog before installation
  * - In safe mode: Shows a Toast notification and prevents installation
  */
+// Some localized translations of module_install_prompt_with_name don't include the %1$s placeholder
+// (e.g., Bosnian translation), which causes the StringFormatInvalid lint warning
 @SuppressLint("StringFormatInvalid")
 @Composable
 private fun ZipFileIntentHandler(

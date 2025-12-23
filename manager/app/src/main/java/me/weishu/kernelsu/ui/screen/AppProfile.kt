@@ -183,11 +183,15 @@ fun AppProfileScreen(
                     appUid = appInfo.uid,
                     sharedUserId = if (isUidGroup) sharedUserId else "",
                     appVersionName = if (isUidGroup) "" else (appInfo.packageInfo.versionName ?: ""),
-                    appVersionCode = if (isUidGroup) 0L else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                        appInfo.packageInfo.longVersionCode
-                    } else {
-                        @Suppress("DEPRECATION")
-                        appInfo.packageInfo.versionCode.toLong()
+                    appVersionCode = if (isUidGroup) 0L else {
+                        // longVersionCode is available since API 28 (Android 9.0)
+                        // minSdk is 26, so we still need to support API 26-27
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                            appInfo.packageInfo.longVersionCode
+                        } else {
+                            @Suppress("DEPRECATION")
+                            appInfo.packageInfo.versionCode.toLong()
+                        }
                     },
                     profile = profile,
                     isUidGroup = isUidGroup,

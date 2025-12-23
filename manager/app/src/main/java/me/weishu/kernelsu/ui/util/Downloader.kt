@@ -25,7 +25,6 @@ import java.io.IOException
  * @author weishu
  * @date 2023/6/22.
  */
-@SuppressLint("Range")
 fun download(
     url: String,
     fileName: String,
@@ -114,7 +113,6 @@ fun checkNewVersion(): LatestVersionInfo {
 fun DownloadListener(context: Context, onDownloaded: (Uri) -> Unit) {
     DisposableEffect(context) {
         val receiver = object : BroadcastReceiver() {
-            @SuppressLint("Range")
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == DownloadManager.ACTION_DOWNLOAD_COMPLETE) {
                     val id = intent.getLongExtra(
@@ -125,16 +123,15 @@ fun DownloadListener(context: Context, onDownloaded: (Uri) -> Unit) {
                         context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                     val cursor = downloadManager.query(query)
                     if (cursor.moveToFirst()) {
-                        val status = cursor.getInt(
-                            cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)
-                        )
+                        val statusIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS)
+                        val status = cursor.getInt(statusIndex)
                         if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                            val uri = cursor.getString(
-                                cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
-                            )
+                            val uriIndex = cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_LOCAL_URI)
+                            val uri = cursor.getString(uriIndex)
                             onDownloaded(uri.toUri())
                         }
                     }
+                    cursor.close()
                 }
             }
         }

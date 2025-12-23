@@ -49,6 +49,8 @@ fun RebootListPopup(
         ) {
             val pm = LocalContext.current.getSystemService(Context.POWER_SERVICE) as PowerManager?
 
+            // isRebootingUserspaceSupported was deprecated in API 30, but there's no replacement API
+            // We need to keep this check for devices that support userspace reboot
             @Suppress("DEPRECATION")
             val isRebootingUserspaceSupported =
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && pm?.isRebootingUserspaceSupported == true

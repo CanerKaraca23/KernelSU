@@ -48,6 +48,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
+import java.util.Locale
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -169,6 +170,7 @@ data class RepoModuleArg(
     val releases: List<ReleaseArg>
 ) : Parcelable
 
+// LocalContextGetResourceValueCall is a false positive for SharedPreferences in Compose
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 @Destination<RootGraph>
@@ -636,7 +638,6 @@ private fun ReadmePage(
     }
 }
 
-@SuppressLint("DefaultLocale")
 @Composable
 fun ReleasesPage(
     detailReleases: List<ReleaseArg>,
@@ -748,9 +749,9 @@ fun ReleasesPage(
                                     val sizeText = remember(asset.size) {
                                         val s = asset.size
                                         when {
-                                            s >= 1024L * 1024L * 1024L -> String.format("%.1f GB", s / (1024f * 1024f * 1024f))
-                                            s >= 1024L * 1024L -> String.format("%.1f MB", s / (1024f * 1024f))
-                                            s >= 1024L -> String.format("%.0f KB", s / 1024f)
+                                            s >= 1024L * 1024L * 1024L -> String.format(Locale.US, "%.1f GB", s / (1024f * 1024f * 1024f))
+                                            s >= 1024L * 1024L -> String.format(Locale.US, "%.1f MB", s / (1024f * 1024f))
+                                            s >= 1024L -> String.format(Locale.US, "%.0f KB", s / 1024f)
                                             else -> "$s B"
                                         }
                                     }
@@ -984,7 +985,8 @@ fun InfoPage(
     }
 }
 
-@SuppressLint("StringFormatInvalid", "DefaultLocale")
+// StringFormatInvalid: Some localized translations may be missing format placeholders
+@SuppressLint("StringFormatInvalid")
 @Composable
 @Destination<RootGraph>
 fun ModuleRepoDetailScreen(

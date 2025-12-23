@@ -31,6 +31,8 @@ import me.weishu.kernelsu.ui.viewmodel.SuperUserViewModel
 import top.yukonga.miuix.kmp.basic.InfiniteProgressIndicator
 import java.io.File
 
+// SetJavaScriptEnabled is required for WebView to work with module WebUI
+// This is safe as we only load content from trusted module directories
 @SuppressLint("SetJavaScriptEnabled")
 class WebUIActivity : ComponentActivity() {
     private lateinit var webviewInterface: WebViewInterface
@@ -71,12 +73,14 @@ class WebUIActivity : ComponentActivity() {
     private suspend fun setupWebView() {
         val moduleId = intent.getStringExtra("id")!!
         val name = intent.getStringExtra("name")!!
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            @Suppress("DEPRECATION")
-            setTaskDescription(ActivityManager.TaskDescription("KernelSU - $name"))
-        } else {
+        // Use Builder API which is available since API 28 (Android 9.0)
+        // For API 26-27, use the deprecated constructor
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val taskDescription = ActivityManager.TaskDescription.Builder().setLabel("KernelSU - $name").build()
             setTaskDescription(taskDescription)
+        } else {
+            @Suppress("DEPRECATION")
+            setTaskDescription(ActivityManager.TaskDescription("KernelSU - $name"))
         }
 
         val prefs = getSharedPreferences("settings", MODE_PRIVATE)
