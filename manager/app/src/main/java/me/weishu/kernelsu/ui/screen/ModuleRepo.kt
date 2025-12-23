@@ -134,7 +134,6 @@ import top.yukonga.miuix.kmp.utils.PressFeedbackType
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 import java.text.Collator
-import java.util.Locale
 
 @Parcelize
 data class ReleaseAssetArg(

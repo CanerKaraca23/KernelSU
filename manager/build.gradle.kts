@@ -31,8 +31,8 @@ val androidTargetSdkVersion = 36
 val androidCompileSdkVersion = 36
 val androidBuildToolsVersion = "36.1.0"
 val androidCompileNdkVersion by extra(libs.versions.ndk.get())
-val androidSourceCompatibility = JavaVersion.VERSION_21
-val androidTargetCompatibility = JavaVersion.VERSION_21
+val androidSourceCompatibility = JavaVersion.VERSION_17
+val androidTargetCompatibility = JavaVersion.VERSION_17
 val managerVersionCode by extra(getVersionCode())
 val managerVersionName by extra(getVersionName())
 
@@ -83,6 +83,12 @@ subprojects {
                 sourceCompatibility = androidSourceCompatibility
                 targetCompatibility = androidTargetCompatibility
             }
+        }
+    }
+    
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
         }
     }
 }
