@@ -112,7 +112,6 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
  * @author weishu
  * @date 2023/10/20.
  */
-// LocalContextGetResourceValueCall is a false positive for SharedPreferences in Compose
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 @Destination<RootGraph>

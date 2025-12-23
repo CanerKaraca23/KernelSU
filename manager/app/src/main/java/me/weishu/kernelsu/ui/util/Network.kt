@@ -6,8 +6,6 @@ import android.net.NetworkCapabilities
 
 fun isNetworkAvailable(context: Context): Boolean {
     val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    // minSdk is 26 (Android 8.0), which is >= M (Android 6.0, API 23)
-    // So we can safely remove the else branch
     val network = cm.activeNetwork ?: return false
     val caps = cm.getNetworkCapabilities(network) ?: return false
 

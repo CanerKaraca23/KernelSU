@@ -170,7 +170,6 @@ data class RepoModuleArg(
     val releases: List<ReleaseArg>
 ) : Parcelable
 
-// LocalContextGetResourceValueCall is a false positive for SharedPreferences in Compose
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 @Destination<RootGraph>
@@ -985,7 +984,6 @@ fun InfoPage(
     }
 }
 
-// StringFormatInvalid: Some localized translations may be missing format placeholders
 @SuppressLint("StringFormatInvalid")
 @Composable
 @Destination<RootGraph>

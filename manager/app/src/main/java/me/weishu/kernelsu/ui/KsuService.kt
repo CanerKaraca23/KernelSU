@@ -45,8 +45,6 @@ class KsuService : RootService() {
         return packages
     }
 
-    // UNCHECKED_CAST is necessary for reflection-based method invocation
-    // The return type is validated by the method signature
     @Suppress("UNCHECKED_CAST")
     private fun getInstalledPackagesAsUser(flags: Int, userId: Int): List<PackageInfo> {
         return try {

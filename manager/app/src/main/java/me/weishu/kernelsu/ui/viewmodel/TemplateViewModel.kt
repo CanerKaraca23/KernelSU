@@ -176,8 +176,6 @@ private fun fetchRemoteTemplates() {
     }.onFailure { Log.e(TAG, "fetchRemoteTemplates: $it", it) }
 }
 
-// UNCHECKED_CAST is necessary here because JSONArray.get() returns Any
-// The cast to T is validated at runtime when transform is called
 @Suppress("UNCHECKED_CAST")
 private fun <T, R> JSONArray.mapCatching(
     transform: (T) -> R, onFail: (Throwable) -> Unit
@@ -306,8 +304,6 @@ fun TemplateViewModel.TemplateInfo.toJSON(): JSONObject {
     }
 }
 
-// This function is used for development/debugging to generate template examples
-// Keep it for future use even though it's currently unused
 @Suppress("unused")
 fun generateTemplates() {
     val templateJson = JSONObject()
