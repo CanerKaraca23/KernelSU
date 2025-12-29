@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v7
+
       - name: Rename ksud
         run: |
           mkdir -p ksud
@@ -41,4 +42,4 @@ jobs:
             manager/*.apk
             android*-lkm/*_kernelsu.ko
             ksud/ksud-*
-            ksuinit/ksuinit*
+            ksuinit/*
