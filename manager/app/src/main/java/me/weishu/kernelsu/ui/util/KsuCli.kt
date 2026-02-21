@@ -68,6 +68,33 @@ fun Uri.getFileName(context: Context): String? {
     return fileName
 }
 
+suspend fun Uri.getSha256(context: Context): String? = withContext(Dispatchers.IO) {
+    return@withContext try {
+        context.contentResolver.openInputStream(this@getSha256)?.use { inputStream ->
+            val digest = java.security.MessageDigest.getInstance("SHA-256")
+            val buffer = ByteArray(8192)
+            var bytesRead: Int
+            while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                digest.update(buffer, 0, bytesRead)
+            }
+            val hashBytes = digest.digest()
+            hashBytes.joinToString("") { "%02x".format(it) }
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
+fun getAppLabel(context: Context, packageName: String): String {
+    val pm = context.packageManager
+    return try {
+        val ai = pm.getApplicationInfo(packageName, 0)
+        pm.getApplicationLabel(ai).toString()
+    } catch (e: Exception) {
+        packageName
+    }
+}
+
 fun createRootShell(globalMnt: Boolean = false): Shell {
     Shell.enableVerboseLogging = BuildConfig.DEBUG
     val builder = Shell.Builder.create()

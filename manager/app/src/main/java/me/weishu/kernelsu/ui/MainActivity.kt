@@ -72,7 +72,9 @@ import me.weishu.kernelsu.ui.screen.SettingPager
 import me.weishu.kernelsu.ui.screen.SuperUserPager
 import me.weishu.kernelsu.ui.screen.TemplateEditorScreen
 import me.weishu.kernelsu.ui.theme.KernelSUTheme
+import me.weishu.kernelsu.ui.util.getAppLabel
 import me.weishu.kernelsu.ui.util.getFileName
+import me.weishu.kernelsu.ui.util.getSha256
 import me.weishu.kernelsu.ui.util.install
 import me.weishu.kernelsu.ui.webui.WebUIActivity
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -321,12 +323,22 @@ private fun ZipFileIntentHandler(
             )
                 .show()
         } else {
+            val displayName = getDisplayName(uri)
+            val hash = uri.getSha256(context)
+            val callingPackage = activity.callingPackage ?: activity.referrer?.let {
+                if (it.scheme == "android-app") it.authority else null
+            } ?: uri.authority
+            val sourceLabel = callingPackage?.let { getAppLabel(context, it) } ?: callingPackage
+            ?: context.getString(R.string.unknown)
+
             zipUri = uri
             installDialog.showConfirm(
                 title = context.getString(R.string.module),
                 content = context.getString(
-                    R.string.module_install_prompt_with_name,
-                    "\n${getDisplayName(uri)}"
+                    R.string.module_install_prompt_details,
+                    "\n${displayName}",
+                    sourceLabel,
+                    hash ?: context.getString(R.string.unknown)
                 )
             )
         }
