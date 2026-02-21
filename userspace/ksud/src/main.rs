@@ -30,7 +30,7 @@ mod ksucalls;
 mod metamodule;
 #[cfg(target_os = "android")]
 mod module;
-#[cfg(target_os = "android")]
+#[cfg(any(target_os = "android", test))]
 mod module_config;
 #[cfg(target_os = "android")]
 mod profile;

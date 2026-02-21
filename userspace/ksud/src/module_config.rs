@@ -6,6 +6,7 @@ use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 
 use crate::defs;
+#[cfg(target_os = "android")]
 use crate::utils::ensure_dir_exists;
 
 #[allow(clippy::unreadable_literal)]
@@ -94,16 +95,19 @@ fn validate_config_count(config: &HashMap<String, String>) -> Result<()> {
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Get the config directory path for a module
 fn get_config_dir(module_id: &str) -> PathBuf {
     Path::new(defs::MODULE_CONFIG_DIR).join(module_id)
 }
 
+#[cfg(target_os = "android")]
 /// Get the config file path for a module
 fn get_config_path(module_id: &str, config_type: ConfigType) -> PathBuf {
     get_config_dir(module_id).join(config_type.filename())
 }
 
+#[cfg(target_os = "android")]
 /// Ensure the config directory exists
 fn ensure_config_dir(module_id: &str) -> Result<PathBuf> {
     let dir = get_config_dir(module_id);
@@ -111,6 +115,7 @@ fn ensure_config_dir(module_id: &str) -> Result<PathBuf> {
     Ok(dir)
 }
 
+#[cfg(target_os = "android")]
 /// Load config from binary file
 pub fn load_config(module_id: &str, config_type: ConfigType) -> Result<HashMap<String, String>> {
     crate::module::validate_module_id(module_id)?;
@@ -191,6 +196,7 @@ pub fn load_config(module_id: &str, config_type: ConfigType) -> Result<HashMap<S
     Ok(config)
 }
 
+#[cfg(target_os = "android")]
 /// Save config to binary file
 pub fn save_config(
     module_id: &str,
@@ -274,6 +280,7 @@ pub fn save_config(
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Get a single config value
 #[allow(dead_code)]
 pub fn get_config_value(
@@ -285,6 +292,7 @@ pub fn get_config_value(
     Ok(config.get(key).cloned())
 }
 
+#[cfg(target_os = "android")]
 /// Set a single config value
 pub fn set_config_value(
     module_id: &str,
@@ -304,6 +312,7 @@ pub fn set_config_value(
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Delete a single config value
 pub fn delete_config_value(module_id: &str, key: &str, config_type: ConfigType) -> Result<()> {
     let mut config = load_config(module_id, config_type)?;
@@ -316,6 +325,7 @@ pub fn delete_config_value(module_id: &str, key: &str, config_type: ConfigType) 
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Clear all config values
 pub fn clear_config(module_id: &str, config_type: ConfigType) -> Result<()> {
     let config_path = get_config_path(module_id, config_type);
@@ -329,6 +339,7 @@ pub fn clear_config(module_id: &str, config_type: ConfigType) -> Result<()> {
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Merge persist and temp configs (temp takes priority)
 pub fn merge_configs(module_id: &str) -> Result<HashMap<String, String>> {
     crate::module::validate_module_id(module_id)?;
@@ -357,6 +368,7 @@ pub fn merge_configs(module_id: &str) -> Result<HashMap<String, String>> {
     Ok(merged)
 }
 
+#[cfg(target_os = "android")]
 /// Get all module configs (for iteration)
 /// Loads all configs in a single pass to minimize I/O overhead
 pub fn get_all_module_configs() -> Result<HashMap<String, HashMap<String, String>>> {
@@ -396,6 +408,7 @@ pub fn get_all_module_configs() -> Result<HashMap<String, HashMap<String, String
     Ok(all_configs)
 }
 
+#[cfg(target_os = "android")]
 /// Clear all temporary configs (called during post-fs-data)
 pub fn clear_all_temp_configs() -> Result<()> {
     let config_root = Path::new(defs::MODULE_CONFIG_DIR);
@@ -438,6 +451,7 @@ pub fn clear_all_temp_configs() -> Result<()> {
     Ok(())
 }
 
+#[cfg(target_os = "android")]
 /// Clear all configs for a module (called during uninstall)
 pub fn clear_module_configs(module_id: &str) -> Result<()> {
     crate::module::validate_module_id(module_id)?;
@@ -455,4 +469,48 @@ pub fn clear_module_configs(module_id: &str) -> Result<()> {
     }
 
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_config_type_filename() {
+        assert_eq!(ConfigType::Persist.filename(), defs::PERSIST_CONFIG_NAME);
+        assert_eq!(ConfigType::Temp.filename(), defs::TEMP_CONFIG_NAME);
+    }
+
+    #[test]
+    fn test_parse_bool_config() {
+        assert!(parse_bool_config("true"));
+        assert!(parse_bool_config("TRUE"));
+        assert!(parse_bool_config("1"));
+        assert!(parse_bool_config(" true "));
+        assert!(!parse_bool_config("false"));
+        assert!(!parse_bool_config("0"));
+        assert!(!parse_bool_config("anything"));
+    }
+
+    #[test]
+    fn test_validate_config_key() {
+        assert!(validate_config_key("valid_key").is_ok());
+        assert!(validate_config_key("valid.key-123").is_ok());
+        assert!(validate_config_key("a").is_err()); // Minimum length: 2 characters (based on regex /^[a-zA-Z][a-zA-Z0-9._-]+$/)
+        assert!(validate_config_key("1invalid").is_err()); // Must start with letter
+        assert!(validate_config_key("").is_err());
+        assert!(validate_config_key("key with spaces").is_err());
+
+        let long_key = "a".repeat(MAX_CONFIG_KEY_LEN + 1);
+        assert!(validate_config_key(&long_key).is_err());
+    }
+
+    #[test]
+    fn test_validate_config_value() {
+        assert!(validate_config_value("valid value").is_ok());
+        assert!(validate_config_value("").is_ok());
+
+        let long_value = "a".repeat(MAX_CONFIG_VALUE_LEN + 1);
+        assert!(validate_config_value(&long_value).is_err());
+    }
 }

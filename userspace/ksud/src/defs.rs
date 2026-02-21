@@ -29,8 +29,6 @@ mod android {
 
     // Module config system
     pub const MODULE_CONFIG_DIR: &str = concatcp!(WORKING_DIR, "module_configs/");
-    pub const PERSIST_CONFIG_NAME: &str = "persist.config";
-    pub const TEMP_CONFIG_NAME: &str = "tmp.config";
 
     // Metamodule support
     pub const METAMODULE_MOUNT_SCRIPT: &str = "metamount.sh";
@@ -44,6 +42,9 @@ mod android {
 
 pub const VERSION_CODE: &str = include_str!(concat!(env!("OUT_DIR"), "/VERSION_CODE"));
 pub const VERSION_NAME: &str = include_str!(concat!(env!("OUT_DIR"), "/VERSION_NAME"));
+
+pub const PERSIST_CONFIG_NAME: &str = "persist.config";
+pub const TEMP_CONFIG_NAME: &str = "tmp.config";
 
 #[cfg(target_os = "android")]
 pub use android::*;
