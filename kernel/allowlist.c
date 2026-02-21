@@ -8,6 +8,7 @@
 #include <linux/list.h>
 #include <linux/printk.h>
 #include <linux/slab.h>
+#include <linux/string.h>
 #include <linux/types.h>
 #include <linux/version.h>
 #include <linux/compiler_types.h>
@@ -76,7 +77,8 @@ static void init_default_profiles()
     memcpy(&default_root_profile.capabilities.effective, &full_cap,
            sizeof(default_root_profile.capabilities.effective));
     default_root_profile.namespaces = KSU_NS_INHERITED;
-    strcpy(default_root_profile.selinux_domain, KSU_DEFAULT_SELINUX_DOMAIN);
+    strscpy(default_root_profile.selinux_domain, KSU_DEFAULT_SELINUX_DOMAIN,
+            sizeof(default_root_profile.selinux_domain));
 
     // This means that we will umount modules by default!
     default_non_root_profile.umount_modules = true;
@@ -116,9 +118,10 @@ static void ksu_grant_root_to_shell()
         .allow_su = true,
         .current_uid = 2000,
     };
-    strcpy(profile.key, "com.android.shell");
-    strcpy(profile.rp_config.profile.selinux_domain,
-           KSU_DEFAULT_SELINUX_DOMAIN);
+    strscpy(profile.key, "com.android.shell", sizeof(profile.key));
+    strscpy(profile.rp_config.profile.selinux_domain,
+            KSU_DEFAULT_SELINUX_DOMAIN,
+            sizeof(profile.rp_config.profile.selinux_domain));
     ksu_set_app_profile(&profile, false);
 }
 #endif
