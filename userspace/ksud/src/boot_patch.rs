@@ -402,6 +402,7 @@ fn find_magiskboot(magiskboot_path: Option<PathBuf>, workdir: &Path) -> Result<P
     Ok(magiskboot)
 }
 
+#[cfg_attr(not(target_os = "android"), allow(unused_variables))]
 fn find_boot_image(
     image: &Option<PathBuf>,
     kmi: &str,
